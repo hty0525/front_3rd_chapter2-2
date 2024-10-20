@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 type Props = {
 	onProductAdd: (newProduct: Product) => void;
@@ -13,9 +13,15 @@ export function AddProduct({ onProductAdd, closeProductForm }: Props) {
 		discounts: [],
 	});
 
-	function handleAddProduct() {
-		const { name, price, stock } = newProduct;
+	const { name, price, stock } = newProduct;
 
+	function handleChangeProductInput({
+		target: { value, name },
+	}: ChangeEvent<HTMLInputElement>) {
+		setNewProduct((prev) => ({ ...prev, [name]: value }));
+	}
+
+	function handleAddProduct() {
 		if (name === "" || price === 0 || stock === 0) {
 			return alert("모든 항목을 입력해주세요.");
 		}
@@ -37,10 +43,8 @@ export function AddProduct({ onProductAdd, closeProductForm }: Props) {
 				<input
 					id="productName"
 					type="text"
-					value={newProduct.name}
-					onChange={(e) =>
-						setNewProduct({ ...newProduct, name: e.target.value })
-					}
+					value={name}
+					onChange={handleChangeProductInput}
 					className="w-full p-2 border rounded"
 				/>
 			</div>
@@ -54,13 +58,8 @@ export function AddProduct({ onProductAdd, closeProductForm }: Props) {
 				<input
 					id="productPrice"
 					type="number"
-					value={newProduct.price}
-					onChange={(e) =>
-						setNewProduct({
-							...newProduct,
-							price: parseInt(e.target.value),
-						})
-					}
+					value={price}
+					onChange={handleChangeProductInput}
 					className="w-full p-2 border rounded"
 				/>
 			</div>
@@ -74,13 +73,8 @@ export function AddProduct({ onProductAdd, closeProductForm }: Props) {
 				<input
 					id="productStock"
 					type="number"
-					value={newProduct.stock}
-					onChange={(e) =>
-						setNewProduct({
-							...newProduct,
-							stock: parseInt(e.target.value),
-						})
-					}
+					value={stock}
+					onChange={handleChangeProductInput}
 					className="w-full p-2 border rounded"
 				/>
 			</div>

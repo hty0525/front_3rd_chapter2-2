@@ -1,5 +1,7 @@
 import { useState } from "react";
+
 import { AddProduct } from "./AddProduct";
+import { Products } from "./Products";
 
 type Props = {
 	products: Product[];
@@ -14,20 +16,8 @@ export function ProductManagement({
 }: Props) {
 	const [isOpenNewProductForm, setIsOpenNewProductForm] = useState(false);
 
-	const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-
-	const [openProductIds, setOpenProductIds] = useState<Set<string>>(new Set());
-
 	function handleToggleProductAddButton() {
 		setIsOpenNewProductForm((prev) => !prev);
-	}
-
-	function handleAddNewProduct() {
-		return 1;
-	}
-
-	function toggleProductAccordion(productId: string) {
-		return 1;
 	}
 
 	return (
@@ -45,6 +35,7 @@ export function ProductManagement({
 					closeProductForm={handleToggleProductAddButton}
 				/>
 			)}
+			<Products products={products} onProductUpdate={onProductUpdate} />
 		</div>
 	);
 }
