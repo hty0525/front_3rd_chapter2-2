@@ -1,4 +1,3 @@
-import { CartItem, Coupon, Product } from "../../../types.ts";
 import { useCart } from "../../hooks";
 
 interface Props {
