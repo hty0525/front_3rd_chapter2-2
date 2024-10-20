@@ -10,10 +10,25 @@ export const calculateCartTotal = (
 	cart: CartItem[],
 	selectedCoupon: Coupon | null
 ) => {
+	const totalBeforeDiscount = cart.reduce(
+		(acc, { product: { price }, quantity }) => acc + price * quantity,
+		0
+	);
+
+	const totalAfterDiscount = cart.reduce(
+		(acc, { product: { price }, quantity }) => acc + price * quantity,
+		0
+	);
+
+	const totalDiscount = cart.reduce(
+		(acc, { product: { price }, quantity }) => acc + price * quantity,
+		0
+	);
+
 	return {
-		totalBeforeDiscount: 0,
-		totalAfterDiscount: 0,
-		totalDiscount: 0,
+		totalBeforeDiscount,
+		totalAfterDiscount,
+		totalDiscount,
 	};
 };
 
