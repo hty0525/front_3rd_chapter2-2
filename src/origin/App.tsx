@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { CartPage } from "./components/CartPage.tsx";
 import { AdminPage } from "./components/AdminPage.tsx";
-import { Coupon, Product } from "../type";
 
 const initialProducts: Product[] = [
 	{
@@ -48,21 +47,21 @@ const initialCoupons: Coupon[] = [
 const App = () => {
 	const [products, setProducts] = useState<Product[]>(initialProducts);
 	const [coupons, setCoupons] = useState<Coupon[]>(initialCoupons);
-	const [isAdmin, setIsAdmin] = useState(false);
+	const [isAdmin, setIsAdmin] = useState(true);
 
-	const handleProductUpdate = (updatedProduct: Product) => {
+	function handleProductUpdate(updatedProduct: Product) {
 		setProducts((prevProducts) =>
 			prevProducts.map((p) => (p.id === updatedProduct.id ? updatedProduct : p))
 		);
-	};
+	}
 
-	const handleProductAdd = (newProduct: Product) => {
+	function handleProductAdd(newProduct: Product) {
 		setProducts((prevProducts) => [...prevProducts, newProduct]);
-	};
+	}
 
-	const handleCouponAdd = (newCoupon: Coupon) => {
+	function handleCouponAdd(newCoupon: Coupon) {
 		setCoupons((prevCoupons) => [...prevCoupons, newCoupon]);
-	};
+	}
 
 	return (
 		<div className="min-h-screen bg-gray-100">

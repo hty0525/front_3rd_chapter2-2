@@ -1,5 +1,10 @@
 import { useState } from "react";
 
 export const useCoupons = (initialCoupons: Coupon[]) => {
-	return { coupons: [], addCoupon: () => undefined };
+	const [coupons, setCoupons] = useState<Coupon[]>(initialCoupons);
+
+	function addCoupon(newCoupon: Coupon) {
+		setCoupons((prev) => [...prev, newCoupon]);
+	}
+	return { coupons, addCoupon };
 };
