@@ -1,6 +1,11 @@
 import { useState } from "react";
 
-export default function AddProduct() {
+type Props = {
+	onProductAdd: (newProduct: Product) => void;
+	closeProductForm: () => void;
+};
+
+export function AddProduct({ onProductAdd, closeProductForm }: Props) {
 	const [newProduct, setNewProduct] = useState<Omit<Product, "id">>({
 		name: "",
 		price: 0,
@@ -8,7 +13,16 @@ export default function AddProduct() {
 		discounts: [],
 	});
 
-	const handleAddNewProduct = () => {};
+	function handleAddProduct() {
+		const { name, price, stock } = newProduct;
+
+		if (name === "" || price === 0 || stock === 0) {
+			return alert("모든 항목을 입력해주세요.");
+		}
+
+		onProductAdd({ ...newProduct, id: Date.now().toString() });
+		closeProductForm();
+	}
 
 	return (
 		<div className="bg-white p-4 rounded shadow mb-4">
@@ -71,7 +85,7 @@ export default function AddProduct() {
 				/>
 			</div>
 			<button
-				onClick={handleAddNewProduct}
+				onClick={handleAddProduct}
 				className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
 			>
 				추가
