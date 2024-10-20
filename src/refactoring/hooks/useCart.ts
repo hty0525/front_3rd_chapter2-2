@@ -6,19 +6,21 @@ export const useCart = () => {
 	const [cart, setCart] = useState<CartItem[]>([]);
 	const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
 
-	const addToCart = (product: Product) => {};
+	function addToCart(product: Product) {}
 
-	const removeFromCart = (productId: string) => {};
+	function removeFromCart(productId: string) {
+		setCart((prev) =>
+			prev.filter((product) => product.product.id !== productId)
+		);
+	}
 
-	const updateQuantity = (productId: string, newQuantity: number) => {};
+	function updateQuantity(productId: string, newQuantity: number) {}
 
-	const applyCoupon = (coupon: Coupon) => {};
+	function applyCoupon(coupon: Coupon) {}
 
-	const calculateTotal = () => ({
-		totalBeforeDiscount: 0,
-		totalAfterDiscount: 0,
-		totalDiscount: 0,
-	});
+	function calculateTotal() {
+		return calculateCartTotal(cart, selectedCoupon);
+	}
 
 	return {
 		cart,
