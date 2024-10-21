@@ -18,7 +18,12 @@ export function AddProduct({ onProductAdd, closeProductForm }: Props) {
 	function handleChangeProductInput({
 		target: { value, name },
 	}: ChangeEvent<HTMLInputElement>) {
-		setNewProduct((prev) => ({ ...prev, [name]: value }));
+		const isPriceOrStock = name === "price" || name === "stock";
+
+		setNewProduct((prev) => ({
+			...prev,
+			[name]: isPriceOrStock ? Number(value) : value,
+		}));
 	}
 
 	function handleAddProductButton() {
@@ -42,6 +47,7 @@ export function AddProduct({ onProductAdd, closeProductForm }: Props) {
 				</label>
 				<input
 					id="productName"
+					name="name"
 					type="text"
 					value={name}
 					onChange={handleChangeProductInput}
@@ -57,6 +63,7 @@ export function AddProduct({ onProductAdd, closeProductForm }: Props) {
 				</label>
 				<input
 					id="productPrice"
+					name="price"
 					type="number"
 					value={price}
 					onChange={handleChangeProductInput}
@@ -73,6 +80,7 @@ export function AddProduct({ onProductAdd, closeProductForm }: Props) {
 				<input
 					id="productStock"
 					type="number"
+					name="stock"
 					value={stock}
 					onChange={handleChangeProductInput}
 					className="w-full p-2 border rounded"
