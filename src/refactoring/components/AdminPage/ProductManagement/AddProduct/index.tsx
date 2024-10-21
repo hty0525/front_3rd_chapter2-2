@@ -21,7 +21,7 @@ export function AddProduct({ onProductAdd, closeProductForm }: Props) {
 		setNewProduct((prev) => ({ ...prev, [name]: value }));
 	}
 
-	function handleAddProduct() {
+	function handleAddProductButton() {
 		if (name === "" || price === 0 || stock === 0) {
 			return alert("모든 항목을 입력해주세요.");
 		}
@@ -79,7 +79,7 @@ export function AddProduct({ onProductAdd, closeProductForm }: Props) {
 				/>
 			</div>
 			<button
-				onClick={handleAddProduct}
+				onClick={handleAddProductButton}
 				className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
 			>
 				추가
