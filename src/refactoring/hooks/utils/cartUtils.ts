@@ -1,8 +1,18 @@
-export const calculateItemTotal = (item: CartItem) => {
-	return 0;
+export const calculateItemTotal = (item: CartItem, isDiscount = true) => {
+	const {
+		product: { price },
+		quantity,
+	} = item;
+
+	const discountRate = getMaxApplicableDiscount(item, isDiscount);
+
+	return price * quantity * (1 - discountRate);
 };
 
-export const getMaxApplicableDiscount = (item: CartItem) => {
+export const getMaxApplicableDiscount = (item: CartItem, isDiscount = true) => {
+	if (!isDiscount) {
+		return 0;
+	}
 	const { product, quantity } = item;
 
 	const discountRates = product.discounts
