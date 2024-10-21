@@ -83,3 +83,10 @@ export const updateCartItemQuantity = (
 
 	return updatedCart;
 };
+
+export const getMaxDiscountRate = (discounts: Discount[]) => {
+	if (discounts.length === 0) {
+		return 0;
+	}
+	return Math.max(...discounts.map(({ rate }) => rate));
+};
