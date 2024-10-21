@@ -27,6 +27,10 @@ export const CartPage = ({ products, coupons }: Props) => {
 					cart={cart}
 					updateQuantity={updateQuantity}
 					removeFromCart={removeFromCart}
+					coupons={coupons}
+					applyCoupon={applyCoupon}
+					calculateTotal={calculateTotal}
+					selectedCoupon={selectedCoupon}
 				/>
 			</div>
 		</div>

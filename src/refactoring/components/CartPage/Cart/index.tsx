@@ -4,9 +4,20 @@ type Props = {
 	cart: CartItem[];
 	updateQuantity: (productId: string, quantity: number) => void;
 	removeFromCart: (productId: string) => void;
+	coupons: Coupon[];
+	selectedCoupon: Coupon | null;
+	applyCoupon: (coupon: Coupon) => void;
+	calculateTotal: () => void;
 };
 
-export function Cart({ cart, updateQuantity, removeFromCart }: Props) {
+export function Cart({
+	cart,
+	updateQuantity,
+	removeFromCart,
+	coupons,
+	selectedCoupon,
+	applyCoupon,
+}: Props) {
 	const getAppliedDiscount = (cartItem: CartItem) => {
 		const { product, quantity } = cartItem;
 		const { discounts } = product;
@@ -84,7 +95,11 @@ export function Cart({ cart, updateQuantity, removeFromCart }: Props) {
 					);
 				})}
 			</div>
-			<ApplyCoupon />
+			<ApplyCoupon
+				coupons={coupons}
+				selectedCoupon={selectedCoupon}
+				applyCoupon={applyCoupon}
+			/>
 			{/* 
 			<div className="mt-6 bg-white p-4 rounded shadow">
 				<h2 className="text-2xl font-semibold mb-2">주문 요약</h2>
