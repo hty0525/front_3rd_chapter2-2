@@ -58,6 +58,10 @@ export function EditProduct({
 	}
 
 	function handleUpdateProductButton() {
+		if (name === "" || price === 0 || stock === 0) {
+			return alert("모든 항목을 입력해주세요.");
+		}
+
 		onProductUpdate(editingProduct);
 		closeEditProductForm();
 	}
