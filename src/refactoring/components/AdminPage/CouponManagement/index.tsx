@@ -18,10 +18,18 @@ export function CouponManagement({ coupons, onCouponAdd }: Props) {
 	function handleChangeCouponInput({
 		target: { value, name },
 	}: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) {
-		setNewCoupon((prev) => ({ ...prev, [name]: value }));
+		const isDiscountValue = name === "discountValue";
+
+		setNewCoupon((prev) => ({
+			...prev,
+			[name]: isDiscountValue ? Number(value) : value,
+		}));
 	}
 
 	function handleAddCouponButton() {
+		if (!name || !code || !discountValue) {
+			return alert("모든 값을 입력해주세요.");
+		}
 		onCouponAdd(newCoupon);
 		setNewCoupon({
 			name: "",
@@ -41,9 +49,7 @@ export function CouponManagement({ coupons, onCouponAdd }: Props) {
 						placeholder="쿠폰 이름"
 						name="name"
 						value={name}
-						onChange={(e) =>
-							setNewCoupon({ ...newCoupon, name: e.target.value })
-						}
+						onChange={handleChangeCouponInput}
 						className="w-full p-2 border rounded"
 					/>
 					<input
