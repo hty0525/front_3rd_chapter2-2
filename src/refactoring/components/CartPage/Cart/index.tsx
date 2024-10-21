@@ -7,7 +7,11 @@ type Props = {
 	coupons: Coupon[];
 	selectedCoupon: Coupon | null;
 	applyCoupon: (coupon: Coupon) => void;
-	calculateTotal: () => void;
+	calculateTotal: () => {
+		totalBeforeDiscount: number;
+		totalDiscount: number;
+		totalAfterDiscount: number;
+	};
 };
 
 export function Cart({
@@ -17,7 +21,11 @@ export function Cart({
 	coupons,
 	selectedCoupon,
 	applyCoupon,
+	calculateTotal,
 }: Props) {
+	const { totalBeforeDiscount, totalDiscount, totalAfterDiscount } =
+		calculateTotal();
+
 	const getAppliedDiscount = (cartItem: CartItem) => {
 		const { product, quantity } = cartItem;
 		const { discounts } = product;
@@ -100,7 +108,7 @@ export function Cart({
 				selectedCoupon={selectedCoupon}
 				applyCoupon={applyCoupon}
 			/>
-			{/* 
+
 			<div className="mt-6 bg-white p-4 rounded shadow">
 				<h2 className="text-2xl font-semibold mb-2">주문 요약</h2>
 				<div className="space-y-1">
@@ -112,7 +120,7 @@ export function Cart({
 						최종 결제 금액: {totalAfterDiscount.toLocaleString()}원
 					</p>
 				</div>
-			</div> */}
+			</div>
 		</div>
 	);
 }
