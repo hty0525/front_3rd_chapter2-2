@@ -20,8 +20,8 @@ export const getMaxApplicableDiscount = (item: CartItem, isDiscount = true) => {
 		.map(({ rate }) => rate);
 
 	if (discountRates.length === 0) {
-	return 0;
-}
+		return 0;
+	}
 
 	return Math.max(...discountRates);
 };
@@ -31,25 +31,35 @@ export const calculateCartTotal = (
 	selectedCoupon: Coupon | null
 ) => {
 	const totalBeforeDiscount = cart.reduce(
-		(acc, { product: { price }, quantity }) => acc + price * quantity,
+		(acc, item) => acc + calculateItemTotal(item, false),
 		0
 	);
 
-	const totalAfterDiscount = cart.reduce(
-		(acc, { product: { price }, quantity }) => acc + price * quantity,
-		0
+	const totalAfterDiscount = applyCoupon(
+		selectedCoupon,
+		cart.reduce((acc, item) => acc + calculateItemTotal(item), 0)
 	);
 
-	const totalDiscount = cart.reduce(
-		(acc, { product: { price }, quantity }) => acc + price * quantity,
-		0
-	);
+	const totalDiscount = totalBeforeDiscount - totalAfterDiscount;
 
 	return {
 		totalBeforeDiscount,
 		totalAfterDiscount,
 		totalDiscount,
 	};
+};
+
+const applyCoupon = (selectedCoupon: Coupon | null, totalAmount: number) => {
+	if (!selectedCoupon) {
+		return totalAmount;
+	}
+	const { discountType, discountValue } = selectedCoupon;
+
+	if (discountType === "amount") {
+		return totalAmount - discountValue;
+	} else {
+		return totalAmount * (1 - discountValue / 100);
+	}
 };
 
 export const updateCartItemQuantity = (
