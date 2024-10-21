@@ -3,7 +3,17 @@ export const calculateItemTotal = (item: CartItem) => {
 };
 
 export const getMaxApplicableDiscount = (item: CartItem) => {
+	const { product, quantity } = item;
+
+	const discountRates = product.discounts
+		.filter(({ quantity: discountQuantity }) => quantity >= discountQuantity)
+		.map(({ rate }) => rate);
+
+	if (discountRates.length === 0) {
 	return 0;
+}
+
+	return Math.max(...discountRates);
 };
 
 export const calculateCartTotal = (
