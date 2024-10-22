@@ -1,4 +1,4 @@
-import { joinClassName } from "../../utils/joinClassName";
+import { joinClassName } from "../../utils";
 
 type Props = {
 	children: React.ReactNode;

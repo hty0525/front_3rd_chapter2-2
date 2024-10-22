@@ -1,4 +1,4 @@
-import React from "react";
+import { joinClassName } from "../../utils";
 
 type Props = {
 	name: string;
@@ -19,7 +19,7 @@ export function Select({
 		<select
 			value={value}
 			name={name}
-			className={["p-2 border rounded", className].join(" ")}
+			className={joinClassName("p-2 border rounded", className)}
 			onChange={onChange}
 		>
 			{children}

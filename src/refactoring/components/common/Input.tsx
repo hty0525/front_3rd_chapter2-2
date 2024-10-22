@@ -1,3 +1,5 @@
+import { joinClassName } from "../../utils";
+
 type Props = {
 	type: React.HTMLInputTypeAttribute;
 	name: string;
@@ -19,7 +21,7 @@ export function Input({
 		<input
 			type={type}
 			name={name}
-			className={["border p-2 rounded", className].join(" ")}
+			className={joinClassName("border p-2 rounded", className)}
 			value={value}
 			placeholder={placeholder}
 			onChange={onChange}

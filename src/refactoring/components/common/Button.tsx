@@ -1,4 +1,5 @@
 import { MouseEventHandler } from "react";
+import { joinClassName } from "../../utils";
 
 type Props = {
 	children: React.ReactNode;
@@ -15,7 +16,7 @@ export function Button({
 }: Props) {
 	return (
 		<button
-			className={[className, "px-3 py-1 rounded"].join(" ")}
+			className={joinClassName("px-3 py-1 rounded", className)}
 			onClick={onClick}
 			disabled={disabled}
 		>

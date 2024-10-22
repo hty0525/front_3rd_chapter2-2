@@ -1,3 +1,5 @@
+import { joinClassName } from "../../utils";
+
 type Props = {
 	children: React.ReactNode;
 	className?: string;
@@ -5,7 +7,7 @@ type Props = {
 
 export function SubSectionTitle({ children, className = "" }: Props) {
 	return (
-		<h3 className={["text-lg font-semibold", className].join(" ")}>
+		<h3 className={joinClassName("text-lg font-semibold", className)}>
 			{children}
 		</h3>
 	);
