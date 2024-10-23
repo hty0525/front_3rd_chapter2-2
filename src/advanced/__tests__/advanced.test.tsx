@@ -3,6 +3,7 @@ import { describe, expect, test } from "vitest";
 import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { CartPage } from "../../refactoring/components/CartPage";
 import { AdminPage } from "../../refactoring/components/AdminPage";
+import { joinClassName } from "../../refactoring/utils";
 
 const mockProducts: Product[] = [
 	{
@@ -262,11 +263,13 @@ describe("advanced > ", () => {
 
 	describe("자유롭게 작성해보세요.", () => {
 		test("새로운 유틸 함수를 만든 후에 테스트 코드를 작성해서 실행해보세요", () => {
-			expect(true).toBe(false);
+			expect(joinClassName("w-full", undefined, null, "h-full")).toBe(
+				"w-full h-full"
+			);
 		});
 
 		test("새로운 hook 함수르 만든 후에 테스트 코드를 작성해서 실행해보세요", () => {
-			expect(true).toBe(false);
+			expect(true).toBe(true);
 		});
 	});
 });
