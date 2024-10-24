@@ -205,7 +205,7 @@ describe("advanced > ", () => {
 			expect(
 				screen.queryByText("10개 이상 구매 시 10% 할인")
 			).not.toBeInTheDocument();
-			console.log(screen);
+
 			expect(
 				screen.queryByText("5개 이상 구매 시 5% 할인")
 			).not.toBeInTheDocument();
