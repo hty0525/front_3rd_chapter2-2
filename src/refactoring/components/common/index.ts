@@ -2,6 +2,7 @@ export * from "./Button";
 export * from "./Input";
 export * from "./PageTitle";
 export * from "./SectionTitle";
+export * from "./SubSectionTitle";
 export * from "./Select";
 export * from "./Container";
 export * from "./ContentBox";
