@@ -1,13 +1,38 @@
 import { describe, expect, test } from "vitest";
-import { act, fireEvent, render, screen, within } from "@testing-library/react";
+import {
+	act,
+	fireEvent,
+	render,
+	renderHook,
+	screen,
+	within,
+} from "@testing-library/react";
 import { CartPage } from "../../refactoring/components/CartPage";
 import { AdminPage } from "../../refactoring/components/AdminPage";
 import { joinClassName } from "../../refactoring/utils";
 import { CombinedContextProvider } from "../../refactoring/context/combinedContext";
+import { getAppliedDiscountRate } from "../../refactoring/hooks/Cart/utils";
+import { applyDiscountCoupon } from "../../refactoring/hooks/utils/cartUtils";
+import { useCart, useCoupons } from "../../refactoring/hooks";
 
 const TestAdminPage = () => {
 	return <CombinedContextProvider>{<AdminPage />}</CombinedContextProvider>;
 };
+
+const mockCoupons: Coupon[] = [
+	{
+		name: "5000원 할인 쿠폰",
+		code: "AMOUNT5000",
+		discountType: "amount",
+		discountValue: 15000,
+	},
+	{
+		name: "10% 할인 쿠폰",
+		code: "PERCENT10",
+		discountType: "percentage",
+		discountValue: 20,
+	},
+];
 
 describe("advanced > ", () => {
 	describe("시나리오 테스트 > ", () => {
@@ -212,10 +237,75 @@ describe("advanced > ", () => {
 			expect(joinClassName("w-full", undefined, null, "h-full")).toBe(
 				"w-full h-full"
 			);
+
+			expect(
+				applyDiscountCoupon(
+					{
+						name: "쿠폰1",
+						code: "coupon1",
+						discountType: "amount",
+						discountValue: 5000,
+					},
+					50000
+				)
+			).toBe(45000);
 		});
 
+		expect(
+			getAppliedDiscountRate({
+				product: {
+					id: "p2",
+					name: "상품2",
+					price: 20000,
+					stock: 20,
+					discounts: [
+						{
+							quantity: 10,
+							rate: 0.15,
+						},
+					],
+				},
+				quantity: 1,
+			})
+		).toBe(0);
+
+		expect(
+			getAppliedDiscountRate({
+				product: {
+					id: "p2",
+					name: "상품2",
+					price: 20000,
+					stock: 20,
+					discounts: [
+						{
+							quantity: 10,
+							rate: 0.15,
+						},
+					],
+				},
+				quantity: 10,
+			})
+		).toBe(0.15);
+
 		test("새로운 hook 함수르 만든 후에 테스트 코드를 작성해서 실행해보세요", () => {
-			expect(true).toBe(true);
+			const { result } = renderHook(() => useCart());
+			expect(result.current.cart.length).toBe(0);
+
+			const { result: result2 } = renderHook(() => useCoupons(mockCoupons));
+			expect(result2.current.coupons.length).toBe(2);
+
+			act(() => {
+				result2.current.addCoupon({
+					name: "쿠폰3",
+					code: "coupon3",
+					discountType: "amount",
+					discountValue: 10000,
+				});
+			});
+			expect(result2.current.coupons.length).toBe(3);
+
+			const couponLength = result2.current.coupons.length;
+			expect(result2.current.coupons[couponLength - 1].code).toBe("coupon3");
 		});
 	});
 });

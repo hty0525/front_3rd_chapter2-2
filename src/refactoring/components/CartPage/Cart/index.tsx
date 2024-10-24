@@ -1,5 +1,5 @@
 import { useCartComponent } from "../../../hooks/Cart";
-import { getAppliedDiscount } from "../../../hooks/Cart/utils";
+import { getAppliedDiscountRate } from "../../../hooks/Cart/utils";
 import { Button, ContentBox, SectionTitle } from "../../common";
 import ApplyCoupon from "./ApplyCoupon";
 
@@ -31,7 +31,7 @@ export function Cart() {
 					const { product, quantity } = item;
 					const { name, price, id } = product;
 
-					const appliedDiscount = getAppliedDiscount(item);
+					const appliedDiscount = getAppliedDiscountRate(item);
 					return (
 						<div
 							key={id}

@@ -1,4 +1,4 @@
-export const getAppliedDiscount = (cartItem: CartItem) => {
+export const getAppliedDiscountRate = (cartItem: CartItem) => {
 	const { product, quantity } = cartItem;
 	const { discounts } = product;
 

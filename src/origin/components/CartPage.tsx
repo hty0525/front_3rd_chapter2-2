@@ -107,7 +107,7 @@ export const CartPage = ({ products, coupons }: Props) => {
 	const { totalBeforeDiscount, totalAfterDiscount, totalDiscount } =
 		calculateTotal();
 
-	const getAppliedDiscount = (item: CartItem) => {
+	const getAppliedDiscountRate = (item: CartItem) => {
 		const { discounts } = item.product;
 		const { quantity } = item;
 		let appliedDiscount = 0;
@@ -191,7 +191,7 @@ export const CartPage = ({ products, coupons }: Props) => {
 
 					<div className="space-y-2">
 						{cart.map((item) => {
-							const appliedDiscount = getAppliedDiscount(item);
+							const appliedDiscount = getAppliedDiscountRate(item);
 							return (
 								<div
 									key={item.product.id}

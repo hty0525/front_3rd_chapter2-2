@@ -35,7 +35,7 @@ export const calculateCartTotal = (
 		0
 	);
 
-	const totalAfterDiscount = applyCoupon(
+	const totalAfterDiscount = applyDiscountCoupon(
 		selectedCoupon,
 		cart.reduce((acc, item) => acc + calculateItemTotal(item), 0)
 	);
@@ -49,7 +49,10 @@ export const calculateCartTotal = (
 	};
 };
 
-const applyCoupon = (selectedCoupon: Coupon | null, totalAmount: number) => {
+export const applyDiscountCoupon = (
+	selectedCoupon: Coupon | null,
+	totalAmount: number
+) => {
 	if (!selectedCoupon) {
 		return totalAmount;
 	}
