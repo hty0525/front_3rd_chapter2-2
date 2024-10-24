@@ -1,6 +1,7 @@
 import { useCouponManagement } from "../../../hooks/CouponManagement";
 import {
 	Button,
+	ContentBox,
 	FlexBox,
 	Input,
 	SectionTitle,
@@ -28,7 +29,7 @@ export function CouponManagement() {
 			<SectionTitle className="text-2xl font-semibold mb-4">
 				쿠폰 관리
 			</SectionTitle>
-			<div className="bg-white p-4 rounded shadow">
+			<ContentBox>
 				<div className="space-y-2 mb-4">
 					{Object.keys(newCoupon).map((key) => {
 						const _key = key as keyof Coupon;
@@ -100,7 +101,7 @@ export function CouponManagement() {
 						))}
 					</div>
 				</div>
-			</div>
+			</ContentBox>
 		</div>
 	);
 }
