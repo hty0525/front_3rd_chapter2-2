@@ -1,32 +1,16 @@
 import { ProductManagement } from "./ProductManagement";
 import { CouponManagement } from "./CouponManagement";
+import { Container, PageTitle } from "../common";
+import { GirdLayout } from "../layouts";
 
-interface Props {
-	products: Product[];
-	coupons: Coupon[];
-	onProductUpdate: (updatedProduct: Product) => void;
-	onProductAdd: (newProduct: Product) => void;
-	onCouponAdd: (newCoupon: Coupon) => void;
-}
-
-export const AdminPage = ({
-	products,
-	coupons,
-	onProductUpdate,
-	onProductAdd,
-	onCouponAdd,
-}: Props) => {
+export const AdminPage = () => {
 	return (
-		<div className="container mx-auto p-4">
-			<h1 className="text-3xl font-bold mb-6">관리자 페이지</h1>
-			<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-				<ProductManagement
-					products={products}
-					onProductAdd={onProductAdd}
-					onProductUpdate={onProductUpdate}
-				/>
-				<CouponManagement coupons={coupons} onCouponAdd={onCouponAdd} />
-			</div>
-		</div>
+		<Container className="p-4">
+			<PageTitle className="text-3xl font-bold mb-6">관리자 페이지</PageTitle>
+			<GirdLayout>
+				<ProductManagement />
+				<CouponManagement />
+			</GirdLayout>
+		</Container>
 	);
 };
