@@ -1,75 +1,68 @@
-import React, { useState } from "react";
+import { useCouponManagement } from "../../../hooks/CouponManagement";
+import {
+	Button,
+	FlexBox,
+	Input,
+	SectionTitle,
+	Select,
+	SubSectionTitle,
+} from "../../common";
 
-type Props = {
-	coupons: Coupon[];
-	onCouponAdd: (newCoupon: Coupon) => void;
-};
-
-export function CouponManagement({ coupons, onCouponAdd }: Props) {
-	const [newCoupon, setNewCoupon] = useState<Coupon>({
-		name: "",
-		code: "",
-		discountType: "percentage",
-		discountValue: 0,
-	});
-
-	const { name, code, discountType, discountValue } = newCoupon;
+export function CouponManagement() {
+	const { coupons, newCoupon, changeNewCoupon, addNewCoupon } =
+		useCouponManagement();
+	const { discountType, discountValue } = newCoupon;
 
 	function handleChangeCouponInput({
 		target: { value, name },
 	}: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) {
-		const isDiscountValue = name === "discountValue";
-
-		setNewCoupon((prev) => ({
-			...prev,
-			[name]: isDiscountValue ? Number(value) : value,
-		}));
+		changeNewCoupon(name as keyof Coupon, value);
 	}
 
 	function handleAddCouponButton() {
-		if (!name || !code || !discountValue) {
-			return alert("모든 값을 입력해주세요.");
-		}
-		onCouponAdd(newCoupon);
-		setNewCoupon({
-			name: "",
-			code: "",
-			discountType: "percentage",
-			discountValue: 0,
-		});
+		addNewCoupon();
 	}
 
 	return (
 		<div>
-			<h2 className="text-2xl font-semibold mb-4">쿠폰 관리</h2>
+			<SectionTitle className="text-2xl font-semibold mb-4">
+				쿠폰 관리
+			</SectionTitle>
 			<div className="bg-white p-4 rounded shadow">
 				<div className="space-y-2 mb-4">
-					<input
-						type="text"
-						placeholder="쿠폰 이름"
-						name="name"
-						value={name}
-						onChange={handleChangeCouponInput}
-						className="w-full p-2 border rounded"
-					/>
-					<input
-						type="text"
-						placeholder="쿠폰 코드"
-						name="code"
-						value={code}
-						onChange={handleChangeCouponInput}
-						className="w-full p-2 border rounded"
-					/>
-					<div className="flex gap-2">
-						<select
+					{Object.keys(newCoupon).map((key) => {
+						const _key = key as keyof Coupon;
+
+						if (_key === "discountType" || _key === "discountValue") {
+							return null;
+						}
+
+						const value = newCoupon[_key];
+						const placeholder = _key === "name" ? "쿠폰 이름" : "쿠폰 코드";
+						const type = _key === "name" ? "text" : "text";
+						return (
+							<Input
+								key={_key}
+								type={type}
+								name={_key}
+								placeholder={placeholder}
+								value={value}
+								className="w-full"
+								onChange={handleChangeCouponInput}
+							/>
+						);
+					})}
+
+					<FlexBox gap={2}>
+						<Select
 							value={discountType}
 							name="discountType"
 							onChange={handleChangeCouponInput}
 							className="w-full p-2 border rounded"
 						>
-							<option value="amount">금액(원)</option>
-							<option value="percentage">할인율(%)</option>
-						</select>
+							<Select.Option value="amount">금액(원)</Select.Option>
+							<Select.Option value="percentage">할인율(%)</Select.Option>
+						</Select>
 						<input
 							type="number"
 							placeholder="할인 값"
@@ -78,16 +71,19 @@ export function CouponManagement({ coupons, onCouponAdd }: Props) {
 							onChange={handleChangeCouponInput}
 							className="w-full p-2 border rounded"
 						/>
-					</div>
-					<button
+					</FlexBox>
+					<Button
 						onClick={handleAddCouponButton}
-						className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600"
+						className="w-full"
+						styleType="green"
 					>
 						쿠폰 추가
-					</button>
+					</Button>
 				</div>
 				<div>
-					<h3 className="text-lg font-semibold mb-2">현재 쿠폰 목록</h3>
+					<SubSectionTitle className="text-lg font-semibold mb-2">
+						현재 쿠폰 목록
+					</SubSectionTitle>
 					<div className="space-y-2">
 						{coupons.map((coupon, index) => (
 							<div
