@@ -6,3 +6,4 @@ export * from "./Select";
 export * from "./Container";
 export * from "./ContentBox";
 export * from "./Label";
+export * from "./FlexBox";
