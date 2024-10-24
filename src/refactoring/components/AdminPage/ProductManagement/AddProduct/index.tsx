@@ -35,7 +35,7 @@ export function AddProduct({ closeProductForm }: Props) {
 				{Object.keys(newProduct).map((key, index) => {
 					const _key = key as keyof typeof newProduct;
 					if (_key === "discounts") {
-						return <></>;
+						return null;
 					}
 					const label = () => {
 						switch (_key) {
@@ -68,6 +68,7 @@ export function AddProduct({ closeProductForm }: Props) {
 						<FlexBox key={index} col>
 							<Label htmlFor={htmlFor()}>{label()}</Label>
 							<Input
+								id={htmlFor()}
 								name={_key}
 								value={value}
 								onChange={handleChangeProductInput}
