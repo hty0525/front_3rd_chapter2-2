@@ -1,150 +1,144 @@
-import { ChangeEvent, useState } from "react";
+import {
+	Button,
+	FlexBox,
+	Input,
+	Label,
+	SubSectionTitle,
+} from "../../../../common";
+import { useEditProduct } from "../../../../../hooks/useEditProduct";
 
 type Props = {
 	product: Product;
-	onProductUpdate: (updatedProduct: Product) => void;
 	closeEditProductForm: () => void;
 };
 
-export function EditProduct({
-	product,
-	onProductUpdate,
-	closeEditProductForm,
-}: Props) {
-	const [editingProduct, setEditingProduct] = useState<Product>(product);
+export function EditProduct({ product, closeEditProductForm }: Props) {
+	const {
+		editingProduct,
+		newDiscount,
+		changeEditingProduct,
+		changeNewDiscount,
+		removeSelectedDiscount,
+		addProductNewDiscount,
+		updateSelectedProduct,
+	} = useEditProduct(product);
 
-	const [newDiscount, setNewDiscount] = useState<Discount>({
-		quantity: 0,
-		rate: 0,
-	});
+	const { discounts } = editingProduct;
 
-	const { name, price, stock, discounts } = editingProduct;
+	function handleChangeEditingProductInput({
+		target: { name, value },
+	}: React.ChangeEvent<HTMLInputElement>) {
+		changeEditingProduct(name as keyof Product, value);
+	}
 
-	const { quantity, rate } = newDiscount;
-
-	function handleChangeProduct({
+	function handleChangeNewDiscountInput({
 		target: { value, name },
-	}: ChangeEvent<HTMLInputElement>) {
-		setEditingProduct((prev) => ({ ...prev, [name]: value }));
+	}: React.ChangeEvent<HTMLInputElement>) {
+		changeNewDiscount(name as keyof Discount, Number(value));
 	}
 
-	function handleChangeProductDiscount({
-		target: { value, name },
-	}: ChangeEvent<HTMLInputElement>) {
-		setNewDiscount((prev) => {
-			const newValue =
-				name === "rate" ? parseInt(value) / 100 : parseInt(value);
-
-			return { ...prev, [name]: newValue };
-		});
-	}
-
-	function handleClickAddDiscountButton() {
-		setEditingProduct((prev) => ({
-			...prev,
-			discounts: [...prev.discounts, newDiscount],
-		}));
-
-		setNewDiscount({ quantity: 0, rate: 0 });
-	}
-
-	function handleRemoveDiscount(index: number) {
+	function handleClickRemoveDiscountButton(index: number) {
 		return function () {
-			setEditingProduct((prev) => ({
-				...prev,
-				discounts: prev.discounts.filter((_, i) => i !== index),
-			}));
+			removeSelectedDiscount(index);
 		};
 	}
 
-	function handleUpdateProductButton() {
-		if (name === "" || price === 0 || stock === 0) {
-			return alert("모든 항목을 입력해주세요.");
-		}
+	function handleClickAddDiscountButton() {
+		addProductNewDiscount();
+	}
 
-		onProductUpdate(editingProduct);
-		closeEditProductForm();
+	function handleUpdateProductButton() {
+		const isSuccess = updateSelectedProduct();
+
+		isSuccess && closeEditProductForm();
 	}
 
 	return (
 		<div>
+			{Object.keys(editingProduct).map((key) => {
+				const _key = key as keyof Product;
+				if (_key === "discounts" || _key === "id") {
+					return null;
+				}
+
+				const label = () => {
+					switch (_key) {
+						case "name":
+							return "상품명";
+						case "price":
+							return "가격";
+						case "stock":
+							return "재고";
+					}
+				};
+
+				const type = _key === "name" ? "text" : "number";
+
+				return (
+					<FlexBox key={_key} className="mb-4" col>
+						<Label>{label()}</Label>
+						<Input
+							type={type}
+							name={key}
+							value={editingProduct[_key]}
+							onChange={handleChangeEditingProductInput}
+						/>
+					</FlexBox>
+				);
+			})}
+
 			<div className="mb-4">
-				<label className="block mb-1">상품명: </label>
-				<input
-					type="text"
-					name="name"
-					value={name}
-					onChange={handleChangeProduct}
-					className="w-full p-2 border rounded"
-				/>
-			</div>
-			<div className="mb-4">
-				<label className="block mb-1">가격: </label>
-				<input
-					type="number"
-					name="price"
-					value={price}
-					onChange={handleChangeProduct}
-					className="w-full p-2 border rounded"
-				/>
-			</div>
-			<div className="mb-4">
-				<label className="block mb-1">재고: </label>
-				<input
-					name="stock"
-					type="number"
-					value={stock}
-					onChange={handleChangeProduct}
-					className="w-full p-2 border rounded"
-				/>
-			</div>
-			할인 정보 수정 부분
-			<div>
-				<h4 className="text-lg font-semibold mb-2">할인 정보</h4>
-				{discounts.map((discount, index) => (
-					<div key={index} className="flex justify-between items-center mb-2">
+				<SubSectionTitle className="text-lg font-semibold mb-2">
+					할인 정보
+				</SubSectionTitle>
+				{discounts.map(({ quantity, rate }, index) => (
+					<FlexBox
+						key={index}
+						justify="between"
+						align="center"
+						className="mb-2"
+					>
 						<span>
-							{discount.quantity}개 이상 구매 시 {discount.rate * 100}% 할인
+							{quantity}개 이상 구매 시 {rate * 100}% 할인
 						</span>
-						<button
-							onClick={handleRemoveDiscount(index)}
-							className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+						<Button
+							onClick={handleClickRemoveDiscountButton(index)}
+							styleType="red"
 						>
 							삭제
-						</button>
-					</div>
+						</Button>
+					</FlexBox>
 				))}
-				<div className="flex space-x-2">
-					<input
-						type="number"
-						placeholder="수량"
-						name="quantity"
-						value={isNaN(quantity) ? "" : quantity}
-						onChange={handleChangeProductDiscount}
-						className="w-1/3 p-2 border rounded"
-					/>
-					<input
-						type="number"
-						placeholder="할인율 (%)"
-						name="rate"
-						value={isNaN(rate) ? "" : rate * 100}
-						onChange={handleChangeProductDiscount}
-						className="w-1/3 p-2 border rounded"
-					/>
-					<button
+				<FlexBox className="space-x-2">
+					{Object.keys(newDiscount).map((key) => {
+						const isRate = key === "rate";
+						const _key = key as keyof Discount;
+						const placeholder = _key === "quantity" ? "수량" : "할인율 (%)";
+						const value = newDiscount[_key];
+						return (
+							<Input
+								key={_key}
+								type="number"
+								name={_key}
+								className="w-1/3"
+								value={isRate ? value * 100 : value}
+								placeholder={placeholder}
+								onChange={handleChangeNewDiscountInput}
+							/>
+						);
+					})}
+					<Button
 						onClick={handleClickAddDiscountButton}
-						className="w-1/3 bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+						styleType="blue"
+						className="w-1/3 block"
 					>
 						할인 추가
-					</button>
-				</div>
+					</Button>
+				</FlexBox>
 			</div>
-			<button
-				onClick={handleUpdateProductButton}
-				className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 mt-2"
-			>
+			<Button onClick={handleUpdateProductButton} styleType="green">
 				수정 완료
-			</button>
+			</Button>
 		</div>
 	);
 }
