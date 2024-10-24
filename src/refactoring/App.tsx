@@ -1,9 +1,10 @@
 import { useState } from "react";
 
-import { Nav, RootLayout, AdminPage, CartPage, Layout } from "./components";
+import { Nav, AdminPage, CartPage } from "./components";
 
 import { CombinedContextProvider } from "./context/combinedContext";
 import { useCoupons, useProducts } from "./hooks";
+import { RootLayout, Layout } from "./components/layouts";
 
 const initialProducts: Product[] = [
 	{
