@@ -1,6 +1,16 @@
 import { useState } from "react";
 
-export const useCoupons = (initialCoupons: Coupon[]) => {
+export type CouponStore = CouponState & CouponAction;
+
+type CouponState = {
+	coupons: Coupon[];
+};
+
+type CouponAction = {
+	addCoupon: (newCoupon: Coupon) => void;
+};
+
+export const useCoupons = (initialCoupons: Coupon[]): CouponStore => {
 	const [coupons, setCoupons] = useState<Coupon[]>(initialCoupons);
 
 	function addCoupon(newCoupon: Coupon) {

@@ -2,9 +2,30 @@
 import { useState } from "react";
 import { calculateCartTotal, updateCartItemQuantity } from "./utils/cartUtils";
 
-export const useCart = () => {
+export type CartStore = CartState & CartAction;
+
+type CartState = {
+	cart: CartItem[];
+	selectedCoupon: Coupon | null;
+	calculateTotal: {
+		totalBeforeDiscount: number;
+		totalAfterDiscount: number;
+		totalDiscount: number;
+	};
+};
+
+type CartAction = {
+	addToCart: (product: Product) => void;
+	removeFromCart: (productId: string) => void;
+	updateQuantity: (productId: string, newQuantity: number) => void;
+	applyCoupon: (coupon: Coupon) => void;
+};
+
+export const useCart = (): CartStore => {
 	const [cart, setCart] = useState<CartItem[]>([]);
 	const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
+
+	const calculateTotal = calculateCartTotal(cart, selectedCoupon);
 
 	function addToCart(product: Product) {
 		setCart((prev) => {
@@ -32,10 +53,6 @@ export const useCart = () => {
 
 	function applyCoupon(coupon: Coupon) {
 		setSelectedCoupon(coupon);
-	}
-
-	function calculateTotal() {
-		return calculateCartTotal(cart, selectedCoupon);
 	}
 
 	return {

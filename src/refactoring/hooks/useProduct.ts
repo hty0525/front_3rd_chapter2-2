@@ -1,6 +1,17 @@
 import { useState } from "react";
 
-export const useProducts = (initialProducts: Product[]) => {
+export type ProductStore = ProductState & ProductAction;
+
+type ProductState = {
+	products: Product[];
+};
+
+type ProductAction = {
+	addProduct: (newProduct: Product) => void;
+	updateProduct: (updatedProduct: Product) => void;
+};
+
+export const useProducts = (initialProducts: Product[]): ProductStore => {
 	const [products, setProducts] = useState<Product[]>(initialProducts);
 
 	function addProduct(newProduct: Product) {
