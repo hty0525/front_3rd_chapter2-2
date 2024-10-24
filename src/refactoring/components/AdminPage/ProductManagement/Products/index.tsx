@@ -1,12 +1,10 @@
 import { useState } from "react";
 import { EditProduct } from "./EditProduct";
+import { Button, ContentBox } from "../../../common";
+import { useCombinedContext } from "../../../../context/combinedContext";
 
-type Props = {
-	products: Product[];
-	onProductUpdate: (updatedProduct: Product) => void;
-};
-
-export function Products({ products, onProductUpdate }: Props) {
+export function Products() {
+	const { products } = useCombinedContext();
 	const [openProductIds, setOpenProductIds] = useState<Set<string>>(new Set());
 
 	const [selectedEditProduct, setSelectedEditProduct] =
@@ -23,15 +21,17 @@ export function Products({ products, onProductUpdate }: Props) {
 	}
 
 	function handleToggleDetailButton(productId: string) {
-		setOpenProductIds((prev) => {
-			const newSet = new Set(prev);
-			if (newSet.has(productId)) {
-				newSet.delete(productId);
-			} else {
-				newSet.add(productId);
-			}
-			return newSet;
-		});
+		return function () {
+			setOpenProductIds((prev) => {
+				const newSet = new Set(prev);
+				if (newSet.has(productId)) {
+					newSet.delete(productId);
+				} else {
+					newSet.add(productId);
+				}
+				return newSet;
+			});
+		};
 	}
 
 	return (
@@ -40,25 +40,20 @@ export function Products({ products, onProductUpdate }: Props) {
 				const { id, name, price, stock } = product;
 
 				return (
-					<div
-						key={product.id}
-						data-testid={`product-${index + 1}`}
-						className="bg-white p-4 rounded shadow"
-					>
-						<button
+					<ContentBox key={product.id} data-testid={`product-${index + 1}`}>
+						<Button
 							data-testid="toggle-button"
-							onClick={() => handleToggleDetailButton(product.id)}
+							onClick={handleToggleDetailButton(product.id)}
 							className="w-full text-left font-semibold"
 						>
 							{name} - {price}원 (재고: {stock})
-						</button>
+						</Button>
 						{openProductIds.has(id) && (
 							<div className="mt-2">
 								{selectedEditProduct &&
 								selectedEditProduct.id === product.id ? (
 									<EditProduct
 										product={product}
-										onProductUpdate={onProductUpdate}
 										closeEditProductForm={closeEditProductForm}
 									/>
 								) : (
@@ -71,18 +66,18 @@ export function Products({ products, onProductUpdate }: Props) {
 												</span>
 											</div>
 										))}
-										<button
+										<Button
 											data-testid="modify-button"
 											onClick={handleClickEditButton(product)}
-											className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 mt-2"
+											styleType="blue"
 										>
 											수정
-										</button>
+										</Button>
 									</div>
 								)}
 							</div>
 						)}
-					</div>
+					</ContentBox>
 				);
 			})}
 		</div>
