@@ -1,25 +1,10 @@
-import { MouseEventHandler } from "react";
 import { joinClassName } from "../../utils";
 
-type Props = {
-	children: React.ReactNode;
-	className?: string;
-	onClick: MouseEventHandler<HTMLButtonElement>;
-	disabled?: boolean;
-};
+type Props = React.ButtonHTMLAttributes<HTMLButtonElement>;
 
-export function Button({
-	children,
-	className = "",
-	disabled = false,
-	onClick,
-}: Props) {
+export function Button({ className, children, ...rest }: Props) {
 	return (
-		<button
-			className={joinClassName("px-3 py-1 rounded", className)}
-			onClick={onClick}
-			disabled={disabled}
-		>
+		<button className={joinClassName(className)} {...rest}>
 			{children}
 		</button>
 	);

@@ -1,44 +1,22 @@
 import { joinClassName } from "../../utils";
 
-type Props = {
-	name: string;
-	value: string;
-	children: React.ReactNode;
-	className?: string;
-	onChange: React.ChangeEventHandler<HTMLSelectElement>;
-};
+type Props = React.SelectHTMLAttributes<HTMLSelectElement>;
 
-export function Select({
-	name,
-	value,
-	children,
-	className = "",
-	onChange,
-}: Props) {
+export function Select({ className, children, ...rest }: Props) {
 	return (
 		<select
-			value={value}
-			name={name}
 			className={joinClassName("p-2 border rounded", className)}
-			onChange={onChange}
+			{...rest}
 		>
 			{children}
 		</select>
 	);
 }
 
-type OptionProps = {
-	value: string;
-	children: React.ReactNode;
-	disabled?: boolean;
-};
+type OptionProps = React.OptionHTMLAttributes<HTMLOptionElement>;
 
-function Option({ children, value, disabled = false }: OptionProps) {
-	return (
-		<option value={value} disabled={disabled}>
-			{children}
-		</option>
-	);
+function Option({ children, ...rest }: OptionProps) {
+	return <option {...rest}>{children}</option>;
 }
 
 Select.Option = Option;
