@@ -1,11 +1,20 @@
 import { ChangeEvent, useState } from "react";
+import { useCombinedContext } from "../../../../context/combinedContext";
+import {
+	Button,
+	ContentBox,
+	FlexBox,
+	Input,
+	Label,
+	SubSectionTitle,
+} from "../../../common";
 
 type Props = {
-	onProductAdd: (newProduct: Product) => void;
 	closeProductForm: () => void;
 };
 
-export function AddProduct({ onProductAdd, closeProductForm }: Props) {
+export function AddProduct({ closeProductForm }: Props) {
+	const { addProduct } = useCombinedContext();
 	const [newProduct, setNewProduct] = useState<Omit<Product, "id">>({
 		name: "",
 		price: 0,
@@ -31,67 +40,67 @@ export function AddProduct({ onProductAdd, closeProductForm }: Props) {
 			return alert("모든 항목을 입력해주세요.");
 		}
 
-		onProductAdd({ ...newProduct, id: Date.now().toString() });
+		addProduct({ ...newProduct, id: Date.now().toString() });
 		closeProductForm();
 	}
 
 	return (
-		<div className="bg-white p-4 rounded shadow mb-4">
-			<h3 className="text-xl font-semibold mb-2">새 상품 추가</h3>
-			<div className="mb-2">
-				<label
-					htmlFor="productName"
-					className="block text-sm font-medium text-gray-700"
-				>
-					상품명
-				</label>
-				<input
-					id="productName"
-					name="name"
-					type="text"
-					value={name}
-					onChange={handleChangeProductInput}
-					className="w-full p-2 border rounded"
-				/>
-			</div>
-			<div className="mb-2">
-				<label
-					htmlFor="productPrice"
-					className="block text-sm font-medium text-gray-700"
-				>
-					가격
-				</label>
-				<input
-					id="productPrice"
-					name="price"
-					type="number"
-					value={price}
-					onChange={handleChangeProductInput}
-					className="w-full p-2 border rounded"
-				/>
-			</div>
-			<div className="mb-2">
-				<label
-					htmlFor="productStock"
-					className="block text-sm font-medium text-gray-700"
-				>
-					재고
-				</label>
-				<input
-					id="productStock"
-					type="number"
-					name="stock"
-					value={stock}
-					onChange={handleChangeProductInput}
-					className="w-full p-2 border rounded"
-				/>
-			</div>
-			<button
+		<ContentBox className="mb-4">
+			<SubSectionTitle className="mb-2">새 상품 추가</SubSectionTitle>
+			<FlexBox col gap={2} className="mb-4">
+				{Object.keys(newProduct).map((key, index) => {
+					const _key = key as keyof typeof newProduct;
+					if (_key === "discounts") {
+						return <></>;
+					}
+					const label = () => {
+						switch (_key) {
+							case "name":
+								return "상품명";
+
+							case "price":
+								return "가격";
+							default:
+								return "재고";
+						}
+					};
+
+					const htmlFor = () => {
+						switch (_key) {
+							case "name":
+								return "productName";
+							case "price":
+								return "productPrice";
+							default:
+								return "productStock";
+						}
+					};
+
+					const value = newProduct[_key];
+
+					const type = _key === "name" ? "text" : "number";
+
+					return (
+						<FlexBox key={index} col>
+							<Label htmlFor={htmlFor()}>{label()}</Label>
+							<Input
+								name={_key}
+								value={value}
+								onChange={handleChangeProductInput}
+								type={type}
+							/>
+						</FlexBox>
+					);
+				})}
+			</FlexBox>
+
+			<Button
+				styleType="blue"
+				className="w-full"
 				onClick={handleAddProductButton}
-				className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
 			>
 				추가
-			</button>
-		</div>
+			</Button>
+		</ContentBox>
 	);
 }
