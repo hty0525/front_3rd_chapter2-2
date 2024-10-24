@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent } from "react";
 import { useCombinedContext } from "../../../../context/combinedContext";
 import {
 	Button,
@@ -8,39 +8,24 @@ import {
 	Label,
 	SubSectionTitle,
 } from "../../../common";
+import { useAddProduct } from "../../../../hooks/useAddProduct";
 
 type Props = {
 	closeProductForm: () => void;
 };
 
 export function AddProduct({ closeProductForm }: Props) {
-	const { addProduct } = useCombinedContext();
-	const [newProduct, setNewProduct] = useState<Omit<Product, "id">>({
-		name: "",
-		price: 0,
-		stock: 0,
-		discounts: [],
-	});
-
-	const { name, price, stock } = newProduct;
+	const { newProduct, changeNewProduct, addNewProduct } = useAddProduct();
 
 	function handleChangeProductInput({
 		target: { value, name },
 	}: ChangeEvent<HTMLInputElement>) {
-		const isPriceOrStock = name === "price" || name === "stock";
-
-		setNewProduct((prev) => ({
-			...prev,
-			[name]: isPriceOrStock ? Number(value) : value,
-		}));
+		const _name = name as keyof Omit<typeof newProduct, "discounts">;
+		changeNewProduct(_name, value);
 	}
 
 	function handleAddProductButton() {
-		if (name === "" || price === 0 || stock === 0) {
-			return alert("모든 항목을 입력해주세요.");
-		}
-
-		addProduct({ ...newProduct, id: Date.now().toString() });
+		addNewProduct();
 		closeProductForm();
 	}
 
