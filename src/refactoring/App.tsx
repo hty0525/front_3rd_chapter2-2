@@ -5,7 +5,7 @@ import { CombinedContextProvider } from "./context/combinedContext";
 import { RootLayout, Layout } from "./components/layouts";
 
 const App = () => {
-	const [isAdmin, setIsAdmin] = useState(!false);
+	const [isAdmin, setIsAdmin] = useState(false);
 
 	const handleClickToggleAdminButton = () => {
 		setIsAdmin((prev) => !prev);
