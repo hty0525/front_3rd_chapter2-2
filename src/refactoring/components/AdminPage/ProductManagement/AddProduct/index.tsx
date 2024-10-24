@@ -1,5 +1,4 @@
 import { ChangeEvent } from "react";
-import { useCombinedContext } from "../../../../context/combinedContext";
 import {
 	Button,
 	ContentBox,
@@ -8,7 +7,7 @@ import {
 	Label,
 	SubSectionTitle,
 } from "../../../common";
-import { useAddProduct } from "../../../../hooks/useAddProduct";
+import { useAddProduct } from "../../../../hooks/ProductManagement";
 
 type Props = {
 	closeProductForm: () => void;

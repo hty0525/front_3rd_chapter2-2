@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useCombinedContext } from "../context/combinedContext";
+import { useCombinedContext } from "../../context/combinedContext";
 
 export const useAddProduct = () => {
 	const { addProduct } = useCombinedContext();

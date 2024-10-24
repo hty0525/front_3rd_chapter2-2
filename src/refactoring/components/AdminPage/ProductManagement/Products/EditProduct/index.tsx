@@ -5,7 +5,7 @@ import {
 	Label,
 	SubSectionTitle,
 } from "../../../../common";
-import { useEditProduct } from "../../../../../hooks/useEditProduct";
+import { useEditProduct } from "../../../../../hooks/ProductManagement";
 
 type Props = {
 	product: Product;
