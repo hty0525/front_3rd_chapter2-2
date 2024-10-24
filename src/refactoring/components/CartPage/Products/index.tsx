@@ -1,19 +1,18 @@
+import { useCombinedContext } from "../../../context/combinedContext";
 import { getMaxDiscountRate } from "../../../hooks/utils/cartUtils";
+import { Button, ContentBox, FlexBox, SectionTitle } from "../../common";
 
-type Props = {
-	cart: CartItem[];
-	products: Product[];
-	addToCart: (product: Product) => void;
-};
-
-export function Products({ cart, products, addToCart }: Props) {
+export function Products() {
+	const { products, cart, addToCart } = useCombinedContext();
 	const handleAddCartButton = (product: Product) => () => {
 		addToCart(product);
 	};
 
 	return (
 		<div>
-			<h2 className="text-2xl font-semibold mb-4">상품 목록</h2>
+			<SectionTitle className="text-2xl font-semibold mb-4">
+				상품 목록
+			</SectionTitle>
 			<div className="space-y-2">
 				{products.map((product) => {
 					const { id, name, price, stock, discounts } = product;
@@ -27,17 +26,13 @@ export function Products({ cart, products, addToCart }: Props) {
 					const maxDiscountRate = getMaxDiscountRate(discounts) * 100;
 
 					return (
-						<div
-							key={id}
-							data-testid={`product-${id}`}
-							className="bg-white p-3 rounded shadow"
-						>
-							<div className="flex justify-between items-center mb-2">
+						<ContentBox key={id} data-testid={`product-${id}`}>
+							<FlexBox align="center" justify="between" className="mb-2">
 								<span className="font-semibold">{name}</span>
 								<span className="text-gray-600">
 									{price.toLocaleString()}원
 								</span>
-							</div>
+							</FlexBox>
 							<div className="text-sm text-gray-500 mb-2">
 								<span
 									className={`font-medium ${
@@ -61,18 +56,14 @@ export function Products({ cart, products, addToCart }: Props) {
 									))}
 								</ul>
 							)}
-							<button
+							<Button
 								onClick={handleAddCartButton(product)}
-								className={`w-full px-3 py-1 rounded ${
-									remainingStock > 0
-										? "bg-blue-500 text-white hover:bg-blue-600"
-										: "bg-gray-300 text-gray-500 cursor-not-allowed"
-								}`}
+								styleType={remainingStock > 0 ? "blue" : "gray"}
 								disabled={remainingStock <= 0}
 							>
 								{remainingStock > 0 ? "장바구니에 추가" : "품절"}
-							</button>
-						</div>
+							</Button>
+						</ContentBox>
 					);
 				})}
 			</div>
