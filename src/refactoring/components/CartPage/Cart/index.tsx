@@ -1,61 +1,31 @@
+import { useCartComponent } from "../../../hooks/Cart";
+import { getAppliedDiscount } from "../../../hooks/Cart/utils";
+import { Button, ContentBox, SectionTitle } from "../../common";
 import ApplyCoupon from "./ApplyCoupon";
 
-type Props = {
-	cart: CartItem[];
-	updateQuantity: (productId: string, quantity: number) => void;
-	removeFromCart: (productId: string) => void;
-	coupons: Coupon[];
-	selectedCoupon: Coupon | null;
-	applyCoupon: (coupon: Coupon) => void;
-	calculateTotal: () => {
-		totalBeforeDiscount: number;
-		totalDiscount: number;
-		totalAfterDiscount: number;
-	};
-};
-
-export function Cart({
-	cart,
-	updateQuantity,
-	removeFromCart,
-	coupons,
-	selectedCoupon,
-	applyCoupon,
-	calculateTotal,
-}: Props) {
+export function Cart() {
+	const { cart, calculateTotal, changeQuantity, removeSelectedFromCart } =
+		useCartComponent();
 	const { totalBeforeDiscount, totalDiscount, totalAfterDiscount } =
-		calculateTotal();
-
-	const getAppliedDiscount = (cartItem: CartItem) => {
-		const { product, quantity } = cartItem;
-		const { discounts } = product;
-
-		const appliedDiscount = discounts.filter(
-			({ quantity: discountQuantity }) => quantity >= discountQuantity
-		);
-
-		if (appliedDiscount.length === 0) {
-			return 0;
-		}
-
-		return Math.max(...appliedDiscount.map(({ rate }) => rate));
-	};
+		calculateTotal;
 
 	function handleUpdateQuantityButton(productId: string, quantity: number) {
 		return function () {
-			updateQuantity(productId, quantity);
+			changeQuantity(productId, quantity);
 		};
 	}
 
 	function handleRemoveCartButton(productId: string) {
 		return function () {
-			removeFromCart(productId);
+			removeSelectedFromCart(productId);
 		};
 	}
 
 	return (
 		<div>
-			<h2 className="text-2xl font-semibold mb-4">장바구니 내역</h2>
+			<SectionTitle className="text-2xl font-semibold mb-4">
+				장바구니 내역
+			</SectionTitle>
 			<div className="space-y-2">
 				{cart.map((item) => {
 					const { product, quantity } = item;
@@ -80,37 +50,32 @@ export function Cart({
 								</span>
 							</div>
 							<div>
-								<button
+								<Button
 									onClick={handleUpdateQuantityButton(id, quantity - 1)}
-									className="bg-gray-300 text-gray-800 px-2 py-1 rounded mr-1 hover:bg-gray-400"
+									className="bg-gray-300 text-gray-800 hover:bg-gray-400"
 								>
 									-
-								</button>
-								<button
+								</Button>
+								<Button
 									onClick={handleUpdateQuantityButton(id, quantity + 1)}
-									className="bg-gray-300 text-gray-800 px-2 py-1 rounded mr-1 hover:bg-gray-400"
+									className="bg-gray-300 text-gray-800 hover:bg-gray-400"
 								>
 									+
-								</button>
-								<button
-									onClick={handleRemoveCartButton(id)}
-									className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
-								>
+								</Button>
+								<Button onClick={handleRemoveCartButton(id)} styleType="red">
 									삭제
-								</button>
+								</Button>
 							</div>
 						</div>
 					);
 				})}
 			</div>
-			<ApplyCoupon
-				coupons={coupons}
-				selectedCoupon={selectedCoupon}
-				applyCoupon={applyCoupon}
-			/>
+			<ApplyCoupon />
 
-			<div className="mt-6 bg-white p-4 rounded shadow">
-				<h2 className="text-2xl font-semibold mb-2">주문 요약</h2>
+			<ContentBox className="mt-6 ">
+				<SectionTitle className="text-2xl font-semibold mb-2">
+					주문 요약
+				</SectionTitle>
 				<div className="space-y-1">
 					<p>상품 금액: {totalBeforeDiscount.toLocaleString()}원</p>
 					<p className="text-green-600">
@@ -120,7 +85,7 @@ export function Cart({
 						최종 결제 금액: {totalAfterDiscount.toLocaleString()}원
 					</p>
 				</div>
-			</div>
+			</ContentBox>
 		</div>
 	);
 }

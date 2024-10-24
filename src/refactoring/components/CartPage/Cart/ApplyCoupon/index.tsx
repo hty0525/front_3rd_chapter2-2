@@ -1,37 +1,34 @@
-type Props = {
-	coupons: Coupon[];
-	selectedCoupon: Coupon | null;
-	applyCoupon: (coupon: Coupon) => void;
-};
+import { useApplyCoupon } from "../../../../hooks/Cart";
+import { ContentBox, SectionTitle, Select } from "../../../common";
 
-export default function ApplyCoupon({
-	coupons,
-	selectedCoupon,
-	applyCoupon,
-}: Props) {
+export default function ApplyCoupon() {
+	const { coupons, selectedCoupon, applySelectedCoupon } = useApplyCoupon();
+
 	function handleChangeCouponTypeSelect({
 		target: { value },
 	}: React.ChangeEvent<HTMLSelectElement>) {
-		applyCoupon(coupons[parseInt(value)]);
+		applySelectedCoupon(value);
 	}
 
 	return (
-		<div className="mt-6 bg-white p-4 rounded shadow">
-			<h2 className="text-2xl font-semibold mb-2">쿠폰 적용</h2>
-			<select
+		<ContentBox className="mt-6 ">
+			<SectionTitle className="text-2xl font-semibold mb-2">
+				쿠폰 적용
+			</SectionTitle>
+			<Select
 				onChange={handleChangeCouponTypeSelect}
 				className="w-full p-2 border rounded mb-2"
 			>
-				<option value="">쿠폰 선택</option>
+				<Select.Option value="">쿠폰 선택</Select.Option>
 				{coupons.map(({ code, name, discountType, discountValue }, index) => (
-					<option key={code} value={index}>
+					<Select.Option key={code} value={index}>
 						{name} -{" "}
 						{discountType === "amount"
 							? `${discountValue}원`
 							: `${discountValue}%`}
-					</option>
+					</Select.Option>
 				))}
-			</select>
+			</Select>
 			{selectedCoupon && (
 				<p className="text-green-600">
 					적용된 쿠폰: {selectedCoupon.name}(
@@ -41,6 +38,6 @@ export default function ApplyCoupon({
 					할인)
 				</p>
 			)}
-		</div>
+		</ContentBox>
 	);
 }

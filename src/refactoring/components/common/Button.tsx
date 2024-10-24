@@ -1,7 +1,7 @@
 import { joinClassName } from "../../utils";
 
 type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-	styleType?: "blue" | "red" | "green";
+	styleType?: "blue" | "red" | "green" | "gray";
 };
 
 export function Button({ className, children, styleType, ...rest }: Props) {
@@ -10,6 +10,7 @@ export function Button({ className, children, styleType, ...rest }: Props) {
 		blue: "bg-blue-500 text-white hover:bg-blue-600",
 		red: "bg-red-500 text-white hover:bg-red-600",
 		green: "bg-green-500 text-white hover:bg-green-600",
+		gray: "bg-gray-300 text-gray-500 cursor-not-allowed",
 	};
 	return (
 		<button
